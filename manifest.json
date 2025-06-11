@@ -1,0 +1,25 @@
+{
+    "manifest_version": 3,
+    "name": "Kick Chat Merger",
+    "version": "1.0",
+    "description": "Displays Kick chat synced with Twitch VODs.",
+    "author": "Rudi Haamke",
+    "homepage_url": "https://github.com/superruudje/kick-chat-merger",
+    "permissions": ["storage", "scripting", "activeTab"],
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://*.twitch.tv/*"],
+            "js": ["libs/pusher.min.js", "kickChat.js"],
+            "run_at": "document_idle"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["kick_logo.jpg"],
+            "matches": ["<all_urls>"]
+        }
+    ]
+}
