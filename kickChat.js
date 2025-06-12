@@ -6,11 +6,16 @@
         return;
     }
 
-    // Get Kick channel ID from storage (default to example 13808)
-    chrome.storage.sync.get("kickChannelId", ({ kickChannelId }) => {
-        const channelId = kickChannelId || "13808";
+    let currentChannel = null;
+    let pusher = null;
 
-        const pusher = new Pusher("32cbd69e4b950bf97679", {
+    function initKickChat(chatroomId) {
+        if (pusher) {
+            if (currentChannel) pusher.unsubscribe(currentChannel);
+            pusher.disconnect();
+        }
+
+        pusher = new Pusher("32cbd69e4b950bf97679", {
             cluster: "us2",
             wsHost: "ws-us2.pusher.com",
             wsPort: 443,
@@ -19,36 +24,39 @@
             enabledTransports: ["ws"],
         });
 
-        const channelName = `chatrooms.${channelId}.v2`;
-        const channel = pusher.subscribe(channelName);
+        currentChannel = `chatrooms.${chatroomId}.v2`;
+        const channel = pusher.subscribe(currentChannel);
 
         channel.bind("App\\Events\\ChatMessageEvent", (event) => {
             try {
-                const messageData = event;
-
-                // Create a new DOM element for the Kick chat message
                 const chatContainer = document.querySelector('[data-test-selector="chat-scrollable-area__message-container"]');
-                if (!chatContainer) {
-                    console.warn("Twitch chat container not found");
-                    return;
-                }
+                if (!chatContainer) return;
 
-                const messageEl = createKickChatMessageElement(messageData);
+                const messageEl = createKickChatMessageElement(event);
                 chatContainer.appendChild(messageEl);
                 chatContainer.scrollTop = chatContainer.scrollHeight;
-
             } catch (err) {
                 console.error("Failed to parse Kick chat message event:", err);
             }
         });
 
-        pusher.connection.bind("error", (err) => {
-            console.error("Pusher connection error:", err);
-        });
+        pusher.connection.bind("error", (err) => console.error("Pusher error:", err));
+        pusher.connection.bind("disconnected", () => console.warn("Pusher disconnected"));
+    }
 
-        pusher.connection.bind("disconnected", () => {
-            console.warn("Pusher connection disconnected");
-        });
+    chrome.storage.sync.get("kickChatroomId", ({ kickChatroomId }) => {
+        const id = kickChatroomId || "13808";
+        initKickChat(id);
+    });
+
+    chrome.runtime.onMessage.addListener((msg) => {
+        if (msg.type === "reloadKickChat") {
+            chrome.storage.sync.get("kickChatroomId", ({ kickChatroomId }) => {
+                if (kickChatroomId) {
+                    initKickChat(kickChatroomId);
+                }
+            });
+        }
     });
 })();
 
