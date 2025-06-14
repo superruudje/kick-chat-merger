@@ -110,7 +110,7 @@ function createKickChatMessageElement(messageData) {
     badgeImg.alt = "Kick badge";
     badgeImg.ariaLabel = "Kick badge";
     badgeImg.className = "chat-badge";
-    badgeImg.src = chrome.runtime.getURL("kick_logo.jpg"); // make sure it's declared in manifest
+    badgeImg.src = chrome.runtime.getURL("kick_logo.jpg");
     badgeImg.tabIndex = 0;
 
     badgeBtn.appendChild(badgeImg);

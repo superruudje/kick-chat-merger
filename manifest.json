@@ -1,13 +1,21 @@
 {
     "manifest_version": 3,
-    "name": "Kick Chat Merger",
-    "version": "1.0",
-    "description": "Displays Kick chat synced with Twitch VODs.",
+    "name": "KickChat2Twitch",
+    "version": "1.0.0",
+    "description": "Inject Kick chat messages seamlessly into Twitch chat UI for a unified viewing experience.",
     "author": "Rudi Haamke",
     "homepage_url": "https://github.com/superruudje/kick-chat-merger",
-    "permissions": ["storage", "scripting", "activeTab"],
+    "permissions": [
+        "storage",
+        "activeTab"
+    ],
     "action": {
-        "default_popup": "popup.html"
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "48": "icons/icon48.png",
+            "128": "icons/icon128.png"
+        }
     },
     "content_scripts": [
         {
@@ -16,10 +24,19 @@
             "run_at": "document_idle"
         }
     ],
+    "host_permissions": [
+        "https://kick.com/api/v1/channels/*",
+        "wss://ws-us2.pusher.com/*"
+    ],
     "web_accessible_resources": [
         {
             "resources": ["kick_logo.jpg"],
             "matches": ["<all_urls>"]
         }
-    ]
+    ],
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    }
 }
