@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "KickChat2Twitch",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Inject Kick chat messages seamlessly into Twitch chat UI for a unified viewing experience.",
     "author": "Rudi Haamke",
     "homepage_url": "https://github.com/superruudje/kick-chat-merger",
