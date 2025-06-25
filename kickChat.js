@@ -29,12 +29,24 @@
 
         channel.bind("App\\Events\\ChatMessageEvent", (event) => {
             try {
-                const chatContainer = document.querySelector('[data-test-selector="chat-scrollable-area__message-container"]');
-                if (!chatContainer) return;
+                const chatWrapper = document.querySelector('[data-a-target="chat-scroller"]')
+                if (!chatWrapper) return;
+
+                const scrollContent = chatWrapper.querySelector('.simplebar-scroll-content');
+                const chatContainer = chatWrapper.querySelector('[data-test-selector="chat-scrollable-area__message-container"]');
+
+                const isNearBottom = scrollContent.scrollHeight - scrollContent.scrollTop - scrollContent.clientHeight < 50;
 
                 const messageEl = createKickChatMessageElement(event);
                 chatContainer.appendChild(messageEl);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                if (isNearBottom) {
+                    scrollContent.scrollTo({
+                        top: scrollContent.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                }
+
             } catch (err) {
                 console.error("Failed to parse Kick chat message event:", err);
             }
