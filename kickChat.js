@@ -1,6 +1,6 @@
-// Wrap everything to avoid polluting global scope
+// Wrap everything to avoid polluting the global scope
 (() => {
-    // Wait for Pusher to be loaded in content script context
+    // Wait for Pusher to be loaded in the content script context
     if (!window.Pusher) {
         console.error("Pusher library not loaded.");
         return;
@@ -9,6 +9,13 @@
     let currentChannel = null;
     let pusher = null;
 
+    /**
+     * Initializes the kick chat functionality by setting up a Pusher connection
+     * and subscribing to the specified chatroom channel to handle incoming chat events.
+     *
+     * @param {string} chatroomId - The ID of the chatroom to connect to and receive messages from.
+     * @return {void} This function does not return a value.
+     */
     function initKickChat(chatroomId) {
         if (pusher) {
             if (currentChannel) pusher.unsubscribe(currentChannel);
@@ -72,6 +79,17 @@
     });
 })();
 
+/**
+ * Creates a chat message element for display in a Kick chat interface.
+ *
+ * @param {Object} messageData - The data object representing the message details.
+ * @param {Object} messageData.sender - The sender's information.
+ * @param {string} messageData.sender.username - The username of the sender.
+ * @param {Object} [messageData.sender.identity] - The sender's identity details.
+ * @param {string} [messageData.sender.identity.color] - The color associated with the sender's username.
+ * @param {string} messageData.content - The text content of the message.
+ * @return {HTMLElement} The constructed DOM element representing the chat message.
+ */
 function createKickChatMessageElement(messageData) {
     const username = messageData.sender.username;
     const color = messageData.sender.identity?.color || "#FFFFFF";
@@ -181,6 +199,12 @@ function createKickChatMessageElement(messageData) {
     return outerLayout;
 }
 
+/**
+ * Parses a message string containing emote placeholders and converts them into text nodes and image elements.
+ *
+ * @param {string} content - The message content to be parsed. It may contain emote placeholders in the format `[emote:id:name]`.
+ * @return {Array.<Node>} An array of DOM nodes, including text nodes and image elements, representing the parsed message content.
+ */
 function parseKickMessage(content) {
     const parts = [];
     const regex = /\[emote:(\d+):([^\]]+)\]/g;

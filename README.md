@@ -14,7 +14,7 @@ This browser extension injects **Kick.com** live chat into the Twitch chat, enab
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/yourname/kick-chat-extension.git
+   git clone https://github.com/superruudje/kickchat2twitch-extension.git
    cd kick-chat-extension
    ```
 
@@ -44,12 +44,12 @@ This browser extension injects **Kick.com** live chat into the Twitch chat, enab
 
 - The extension fetches the `chatroomId` for the given Kick channel name.
 - It subscribes to Kick’s Pusher channel: `chatrooms.{id}.v2`.
-- Messages are rendered into a designated chat container on the page (e.g. Twitch/YouTube chat area).
+- Messages are rendered into a designated chat container on the page (e.g., Twitch/YouTube chat area).
 
 ## Development Notes
 
 - Chat injection logic is in the content script and uses a dynamically invoked function.
-- Communication between popup and content script is done via `chrome.runtime.sendMessage`.
+- Communication between a popup and content script is done via `chrome.runtime.sendMessage`.
 - Kick API endpoint used:
   ```
   https://kick.com/api/v1/channels/{channelName}
@@ -62,4 +62,4 @@ This browser extension injects **Kick.com** live chat into the Twitch chat, enab
 
 ## License
 
-MIT © Rudi Haamke
+MIT © Superruudje
